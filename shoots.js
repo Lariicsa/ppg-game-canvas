@@ -36,8 +36,9 @@ class makeSquare{
   }
 }
 
-
-
+// The ship the user controls
+const ship = new makeSquare(50, canvas.height / 2 - 25, 50, 5)
+//var ship = makeSquare(50, canvas.height / 2 - 25, 50, 5);
 
 
 var up = false;
@@ -47,8 +48,9 @@ var space = false;
 
 var shooting = false;
 
-
+//var bullet = makeSquare(0, 0, 10, 10);
 const bullet = new makeSquare(0, 0, 10, 10)
+
 
 var enemies = [];
 
@@ -100,21 +102,21 @@ function menu() {
   canvas.addEventListener('click', startGame);
 }
 
-
+// Start the game
 function startGame() {
-	
+	// Kick off the enemy spawn interval
   timeoutId = setInterval(makeEnemy, timeBetweenEnemies);
-  
+  // Make the first enemy
   setTimeout(makeEnemy, 1000);
-  
+  // Kick off the draw loop
   draw();
-  
+  // Stop listening for click events
   canvas.removeEventListener('click', startGame);
 }
 
-
+// Show the end game screen
 function endGame() {
-	
+	// Stop the spawn interval
   clearInterval(timeoutId);
   // Show the final score
   erase();
@@ -124,7 +126,7 @@ function endGame() {
   context.fillText('Game Over. Final Score: ' + score, canvas.width / 2, canvas.height / 2);
 }
 
-
+// Listen for keydown events
 canvas.addEventListener('keydown', function(event) {
   event.preventDefault();
   if (event.keyCode === 38) { // UP
@@ -138,7 +140,7 @@ canvas.addEventListener('keydown', function(event) {
   }
 });
 
-
+// Listen for keyup events
 canvas.addEventListener('keyup', function(event) {
   event.preventDefault();
   if (event.keyCode === 38) { // UP 
@@ -155,7 +157,7 @@ function erase() {
   context.fillRect(0, 0, 800, 400);
 }
 
-
+// Shoot the bullet (if not already on screen)
 function shoot() {
   if (!shooting) {
     shooting = true;
@@ -164,11 +166,11 @@ function shoot() {
   }
 }
 
-
+// The main draw loop
 function draw() {
   erase();
   var gameOver = false;
-  
+  // Move and draw the enemies
   enemies.forEach(function(enemy) {
     enemy.x -= enemy.s;
     if (enemy.x < 0) {
@@ -177,38 +179,40 @@ function draw() {
     context.fillStyle = '#00FF00';
     enemy.draw();
   });
-  
+  // Collide the ship with enemies
   enemies.forEach(function(enemy, i) {
     if (isColliding(enemy, ship)) {
       gameOver = true;
     }
   });
-  
+  // Move the ship
   if (down) {
     ship.y += ship.s;
   }
   if (up) {
     ship.y -= ship.s;
   }
-  
+  // Don't go out of bounds
   if (ship.y < 0) {
     ship.y = 0;
   }
   if (ship.y > canvas.height - ship.l) {
     ship.y = canvas.height - ship.l;
   }
-  
+  // Draw the ship
+  //context.fillStyle = '#FF0000';
   ship.draw();
- 
+  // Move and draw the bullet
   if (shooting) {
-
+    // Move the bullet
     bullet.x += bullet.s;
-
+    // Collide the bullet with enemies
     enemies.forEach(function(enemy, i) {
       if (isColliding(bullet, enemy)) {
         enemies.splice(i, 1);
         score++;
-       
+        shooting = false;
+        // Make the game harder
         if (score % 10 === 0 && timeBetweenEnemies > 1000) {
           clearInterval(timeoutId);
           timeBetweenEnemies -= 1000;
@@ -218,20 +222,20 @@ function draw() {
         }
       }
     });
-    
+    // Collide with the wall
     if (bullet.x > canvas.width) {
       shooting = false;
     }
-    
+    // Draw the bullet
     context.fillStyle = '#0000FF';
     bullet.draw();
   }
-
+  // Draw the score
   context.fillStyle = '#000000';
   context.font = '24px Arial';
   context.textAlign = 'left';
   context.fillText('Score: ' + score, 1, 25)
-
+  // End or continue the game
   if (gameOver) {
     endGame();
   } else {
@@ -241,5 +245,7 @@ function draw() {
 
 
  canvas.focus();
+
+
 
 startGame()
