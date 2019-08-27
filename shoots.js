@@ -90,7 +90,7 @@ function makeEnemy() {
 const board = new Board()
 
 //girl
-const ship = new makeSquare(50, canvas.height / 2 - 25, 50, 5)
+const girl = new makeSquare(50, canvas.height / 2 - 25, 50, 5)
 
 let up = false;
 let down = false;
@@ -205,17 +205,16 @@ function erase() {
 function shoot() {
   if (!shooting) {
     shooting = true;
-    bullet.x = ship.x + ship.l;
-    bullet.y = ship.y + ship.l / 2;
+    bullet.x = girl.x + girl.l;
+    bullet.y = girl.y + girl.l / 2;
   }
 }
 
 
 function draw() {
   erase();
-
   board.draw()
-  var gameOver = false;
+  let gameOver = false;
 
   enemies.forEach(function(enemy) {
     enemy.draw() //added
@@ -228,27 +227,27 @@ function draw() {
   });
 
   enemies.forEach(function(enemy, i) {
-    if (isColliding(enemy, ship)) {
+    if (isColliding(enemy, girl)) {
       enemy.draw()  //added
       gameOver = true;
     }
   });
 
   if (down) {
-    ship.y += ship.s;
+    girl.y += girl.s;
   }
   if (up) {
-    ship.y -= ship.s;
+    girl.y -= girl.s;
   }
  
-  if (ship.y < 0) {
-    ship.y = 0;
+  if (girl.y < 0) {
+    girl.y = 0;
   }
-  if (ship.y > canvas.height - ship.l) {
-    ship.y = canvas.height - ship.l;
+  if (girl.y > canvas.height - girl.l) {
+    girl.y = canvas.height - girl.l;
   }
 
-  ship.draw();
+  girl.draw();
  
   if (shooting) {
    
