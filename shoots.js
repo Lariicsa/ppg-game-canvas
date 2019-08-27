@@ -1,22 +1,46 @@
-
-
-
+var canvas = document.getElementById('canvas');
 
 var context = canvas.getContext('2d');
 
-// Create an object representing a square on the canvas
-// function makeSquare(x, y, length, speed) {
-//   return {
-//     x: x,
-//     y: y,
-//     l: length,
-//     s: speed,
-    
-//     draw: function() {
-//       context.fillRect(this.x, this.y, this.l, this.l);
-//     }
-//   };
-// }
+class Board {
+  constructor() {
+    this.x = 0
+    this.y = 0
+    this.width = canvas.width
+    this.height = canvas.height
+    this.img = new Image()
+    this.img.src = './images/townsville.png'
+    this.img.onload = () => {
+      this.draw()
+    }
+    this.audio = new Audio()
+    this.audio.src = './ppg-audio.mp3'
+    this.audio.onload = () =>{
+      this.playAudio()
+    }
+
+  }
+  draw() {
+    this.x--
+    if (this.x < -canvas.width) {
+      this.x = 0
+    }
+    context.drawImage(this.img, this.x, this.y, this.width, this.height)
+    context.drawImage(
+      this.img,
+      this.x + canvas.width,
+      this.y,
+      this.width,
+      this.height,
+    )
+  }
+
+  playAudio() {
+    this.audio = true;
+  }
+
+}
+
 
 class makeSquare{
   constructor(x, y, length, speed) {
@@ -36,9 +60,11 @@ class makeSquare{
   }
 }
 
-// The ship the user controls
+//Background
+const board = new Board()
+
 const ship = new makeSquare(50, canvas.height / 2 - 25, 50, 5)
-//var ship = makeSquare(50, canvas.height / 2 - 25, 50, 5);
+
 
 
 var up = false;
@@ -48,7 +74,6 @@ var space = false;
 
 var shooting = false;
 
-//var bullet = makeSquare(0, 0, 10, 10);
 const bullet = new makeSquare(0, 0, 10, 10)
 
 
@@ -88,22 +113,9 @@ var timeBetweenEnemies = 5 * 1000;
 var timeoutId = null;
 
 
-function menu() {
-  erase();
-  context.fillStyle = '#000000';
-  context.font = '36px Arial';
-  context.textAlign = 'center';
-  context.fillText('Shoot \'Em!', canvas.width / 2, canvas.height / 4);
-  context.font = '24px Arial';
-  context.fillText('Click to Start', canvas.width / 2, canvas.height / 2);
-  context.font = '18px Arial';
-  context.fillText('Up/Down to move, Space to shoot.', canvas.width / 2, (canvas.height / 4) * 3);
-  
-  canvas.addEventListener('click', startGame);
-}
-
-// Start the game
 function startGame() {
+  board.draw()
+
 	// Kick off the enemy spawn interval
   timeoutId = setInterval(makeEnemy, timeBetweenEnemies);
   // Make the first enemy
@@ -116,17 +128,18 @@ function startGame() {
 
 // Show the end game screen
 function endGame() {
-	// Stop the spawn interval
+  board.draw()
+	
   clearInterval(timeoutId);
-  // Show the final score
+  
   erase();
   context.font = '50px Sonsie One'
-  context.fillStyle = '#213867';
+ 
   //context.fillText('Game Over', canvas.width / 2 - 140, 200)
   context.fillText('Game Over. Final Score: ' + score, canvas.width / 2, canvas.height / 2);
 }
 
-// Listen for keydown events
+
 canvas.addEventListener('keydown', function(event) {
   event.preventDefault();
   if (event.keyCode === 38) { // UP
@@ -140,7 +153,7 @@ canvas.addEventListener('keydown', function(event) {
   }
 });
 
-// Listen for keyup events
+
 canvas.addEventListener('keyup', function(event) {
   event.preventDefault();
   if (event.keyCode === 38) { // UP 
@@ -151,13 +164,13 @@ canvas.addEventListener('keyup', function(event) {
   }
 });
 
-// Clear the canvas
+
 function erase() {
-  context.fillStyle = '#FFFFFF';
+  
   context.fillRect(0, 0, 800, 400);
 }
 
-// Shoot the bullet (if not already on screen)
+
 function shoot() {
   if (!shooting) {
     shooting = true;
@@ -166,11 +179,13 @@ function shoot() {
   }
 }
 
-// The main draw loop
+
 function draw() {
   erase();
+
+  board.draw()
   var gameOver = false;
-  // Move and draw the enemies
+
   enemies.forEach(function(enemy) {
     enemy.x -= enemy.s;
     if (enemy.x < 0) {
@@ -179,40 +194,39 @@ function draw() {
     context.fillStyle = '#00FF00';
     enemy.draw();
   });
-  // Collide the ship with enemies
+
   enemies.forEach(function(enemy, i) {
     if (isColliding(enemy, ship)) {
       gameOver = true;
     }
   });
-  // Move the ship
+
   if (down) {
     ship.y += ship.s;
   }
   if (up) {
     ship.y -= ship.s;
   }
-  // Don't go out of bounds
+ 
   if (ship.y < 0) {
     ship.y = 0;
   }
   if (ship.y > canvas.height - ship.l) {
     ship.y = canvas.height - ship.l;
   }
-  // Draw the ship
-  //context.fillStyle = '#FF0000';
+
   ship.draw();
-  // Move and draw the bullet
+ 
   if (shooting) {
-    // Move the bullet
+   
     bullet.x += bullet.s;
-    // Collide the bullet with enemies
+
     enemies.forEach(function(enemy, i) {
       if (isColliding(bullet, enemy)) {
         enemies.splice(i, 1);
         score++;
         shooting = false;
-        // Make the game harder
+
         if (score % 10 === 0 && timeBetweenEnemies > 1000) {
           clearInterval(timeoutId);
           timeBetweenEnemies -= 1000;
@@ -222,20 +236,20 @@ function draw() {
         }
       }
     });
-    // Collide with the wall
+   
     if (bullet.x > canvas.width) {
       shooting = false;
     }
-    // Draw the bullet
+  
     context.fillStyle = '#0000FF';
     bullet.draw();
   }
-  // Draw the score
-  context.fillStyle = '#000000';
+ 
+
   context.font = '24px Arial';
   context.textAlign = 'left';
   context.fillText('Score: ' + score, 1, 25)
-  // End or continue the game
+
   if (gameOver) {
     endGame();
   } else {
@@ -243,9 +257,7 @@ function draw() {
   }
 }
 
-
  canvas.focus();
-
 
 
 startGame()
