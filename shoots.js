@@ -38,15 +38,16 @@ class Board {
   playAudio() {
     this.audio = true;
   }
-
+  
 }
 
 
-class makeSquare{
-  constructor(x, y, length, speed) {
+class Powergirl{
+  constructor(x, y, length, height, speed) {
     this.x= x
     this.y= y
     this.l= length
+    this.height = height
     this.s= speed
     this.img = new Image()
     this.img.src = './images/buttercup1.png'
@@ -55,7 +56,7 @@ class makeSquare{
   }
 
   draw() {
-    context.drawImage(this.img, this.x, this.y, this.l, this.l)
+    context.drawImage(this.img, this.x, this.y, this.l, this.height)
   }
 }
 
@@ -89,8 +90,10 @@ function makeEnemy() {
 //Background
 const board = new Board()
 
+console.log(board)
+
 //girl
-const girl = new makeSquare(50, canvas.height / 2 - 25, 50, 5)
+const girl = new Powergirl(50, canvas.height / 2, 116, 48, 5)
 
 let up = false;
 let down = false;
@@ -206,7 +209,7 @@ function shoot() {
   if (!shooting) {
     shooting = true;
     bullet.x = girl.x + girl.l;
-    bullet.y = girl.y + girl.l / 2;
+    bullet.y = girl.y + girl.height / 2;
   }
 }
 
@@ -243,8 +246,8 @@ function draw() {
   if (girl.y < 0) {
     girl.y = 0;
   }
-  if (girl.y > canvas.height - girl.l) {
-    girl.y = canvas.height - girl.l;
+  if (girl.y > canvas.height - girl.height) {
+    girl.y = canvas.height - girl.height;
   }
 
   girl.draw();
