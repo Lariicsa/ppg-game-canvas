@@ -1,6 +1,6 @@
-let canvas = document.getElementById('canvas');
+let canvas = document.getElementById('canvas')
 
-let context = canvas.getContext('2d');
+let context = canvas.getContext('2d')
 
 class Board {
   constructor() {
@@ -36,7 +36,7 @@ class Board {
   }
 
   playAudio() {
-    this.audio = true;
+    this.audio = true
   }
   
 }
@@ -62,29 +62,56 @@ class Powergirl{
 
 
 class Enemy{
-  constructor(x, y, length, speed) {
+  constructor(x, y, length, speed, num) {
     this.x= x
     this.y= y
     this.l= length
     this.s= speed
     this.imgv1 = new Image()
-    this.imgv1.src = './images/gruber.png'
+    this.imgv1.src = './images/mojo-jojo.png'
+    this.imgv2 = new Image()
+    this.imgv2.src = './images/sedusa.png'
+    this.imgv3 = new Image()
+    this.imgv3.src = './images/him.png'
+    this.imgv4 = new Image()
+    this.imgv4.src = './images/ameaba.png'
+    this.imgv5 = new Image()
+    this.imgv5.src = './images/princess.png'
+    this.imgv6 = new Image()
+    this.imgv6.src = './images/gruber.png'
+    this.imgv7 = new Image()
+    this.imgv7.src = './images/snake.png'
+    this.num = num
   }
 
-  draw() {
-    context.drawImage(this.imgv1, this.x, this.y, this.l, this.l)
+  draw(num) {
+    if(num === 0) {
+      context.drawImage(this.imgv1, this.x, this.y, this.l, this.l)
+    } else if (num === 1){
+      context.drawImage(this.imgv2, this.x, this.y, this.l, this.l)
+    } else if (num === 2){
+      context.drawImage(this.imgv3, this.x, this.y, this.l, this.l)
+    }
   }
 }
 
-let enemies = [];
+// const grubber = new Enemy()
+// const snake = new Enemy()
+// const badbutter = new Enemy()
 
-let enemyBaseSpeed = 2;
+// let enemies2 = [grubber, snake, badbutter]
+
+
+let enemies = []
+let enemyBaseSpeed = 2
 function makeEnemy() {
-  var enemyX = canvas.width;
-  var enemySize = Math.round((Math.random() * 45)) + 15;
-  var enemyY = Math.round(Math.random() * (canvas.height - enemySize * 2)) + enemySize;
-  var enemySpeed = Math.round(Math.random() * enemyBaseSpeed) + enemyBaseSpeed;
-  enemies.push(new Enemy(enemyX, enemyY, enemySize, enemySpeed));
+  let num = Math.round((Math.random() * 2))
+  let enemyX = canvas.width
+  let enemySize = Math.round((Math.random() * 100)) + 15
+  let enemyY = Math.round(Math.random() * (canvas.height - enemySize * 2)) + enemySize
+  let enemySpeed = Math.round(Math.random() * enemyBaseSpeed) + enemyBaseSpeed
+  enemies.push(new Enemy(enemyX, enemyY, enemySize, enemySpeed, num))
+
 }
 
 //Background
@@ -95,10 +122,10 @@ console.log(board)
 //girl
 const girl = new Powergirl(50, canvas.height / 2, 116, 48, 5)
 
-let up = false;
-let down = false;
-let space = false;
-let shooting = false;
+let up = false
+let down = false
+let space = false
+let shooting = false
 
 class Laser{
   constructor(x, y, length, height, speed) {
@@ -118,182 +145,182 @@ class Laser{
 
 const bullet = new Laser(0, 0, 100, 14, 10)
 
-console.log(bullet)
-
 
 function isWithin(a, b, c) {
-  return (a > b && a < c);
+  return (a > b && a < c)
 }
 
 
 function isColliding(a, b) {
-  let result = false;
+  let result = false
   if (isWithin(a.x, b.x, b.x + b.l) || isWithin(a.x + a.l, b.x, b.x + b.l)) {
     if (isWithin(a.y, b.y, b.y + b.l) || isWithin(a.y + a.l, b.y, b.y + b.l)) {
-      result = true;
+      result = true
     }
   }
-  return result;
+  return result
 }
 
 
-let score = 0;
+let score = 0
 
-let timeBetweenEnemies = 5 * 1000;
+let timeBetweenEnemies = 5 * 1000
 
-let timeoutId = null;
+let timeoutId = null
 
 
 function startGame() {
   
 	// Kick off the enemy spawn interval
-  timeoutId = setInterval(makeEnemy, timeBetweenEnemies);
+  timeoutId = setInterval(makeEnemy, timeBetweenEnemies)
 
   board.draw()
   // Make the first enemy
   
-  setTimeout(makeEnemy, 1000);
+  setTimeout(makeEnemy, 1000)
 
-  draw();
+  draw()
   
-  canvas.removeEventListener('click', startGame);
+  canvas.removeEventListener('click', startGame)
 }
 
 // Show the end game screen
 function endGame() {
   board.draw()
 	
-  clearInterval(timeoutId);
+  clearInterval(timeoutId)
   
-  erase();
+  erase()
   context.font = '50px Sonsie One'
 
   board.draw()
-  context.fillStyle = '#213867';
-  context.fillText('Game Over. Final Score: ' + score, canvas.width / 2, canvas.height / 2);
+  context.fillStyle = '#213867'
+  context.fillText('Game Over.', canvas.width/2 -200, canvas.height / 2)
   
 }
 
 
 canvas.addEventListener('keydown', function(event) {
-  event.preventDefault();
+  event.preventDefault()
   if (event.keyCode === 38) { // UP
-    up = true;
+    up = true
   }
   if (event.keyCode === 40) { // DOWN
-    down = true;
+    down = true
   }
   if (event.keyCode === 32) { // SPACE
-    shoot();
+    shoot()
   }
-});
+})
 
 
 canvas.addEventListener('keyup', function(event) {
-  event.preventDefault();
+  event.preventDefault()
   if (event.keyCode === 38) { // UP 
-    up = false;
+    up = false
   }
   if (event.keyCode === 40) { // DOWN
-    down = false;
+    down = false
   }
-});
+})
 
 
 function erase() {
-  context.fillRect(0, 0, 800, 400);
+  context.fillRect(0, 0, 800, 400)
 }
 
 
 function shoot() {
   if (!shooting) {
-    shooting = true;
-    bullet.x = girl.x + girl.l;
-    bullet.y = girl.y + girl.height / 2;
+    shooting = true
+    bullet.x = girl.x + girl.l
+    bullet.y = girl.y + girl.height / 2
   }
 }
 
-
+let num = Math.round((Math.random() * 2))
 function draw() {
-  erase();
+  erase()
   board.draw()
-  let gameOver = false;
+  let gameOver = false
 
-  enemies.forEach(function(enemy) {
-    enemy.draw() //added
-    enemy.x -= enemy.s;
+  enemies.forEach(function(enemy, i) {
+    enemy.draw(num)
+    enemy.x -= enemy.s
     if (enemy.x < 0) {
-      gameOver = true;
+      gameOver = true
     }
-    context.fillStyle = '#111';
-    
-  });
+    context.fillStyle = '#111'
+  })
+
 
   enemies.forEach(function(enemy, i) {
     if (isColliding(enemy, girl)) {
       enemy.draw()  //added
-      gameOver = true;
+      gameOver = true
     }
-  });
+  })
 
   if (down) {
-    girl.y += girl.s;
+    girl.y += girl.s
   }
   if (up) {
-    girl.y -= girl.s;
+    girl.y -= girl.s
   }
  
   if (girl.y < 0) {
-    girl.y = 0;
+    girl.y = 0
   }
   if (girl.y > canvas.height - girl.height) {
-    girl.y = canvas.height - girl.height;
+    girl.y = canvas.height - girl.height
   }
 
-  girl.draw();
+  girl.draw()
  
   if (shooting) {
    
-    bullet.x += bullet.s;
+    bullet.x += bullet.s
 
     enemies.forEach(function(enemy, i) {
-      enemy.draw() //added
+      
+      enemy.draw() 
       if (isColliding(bullet, enemy)) {
-        enemies.splice(i, 1);
-        score++;
-        shooting = false;
+        enemies.splice(i, 1)
+        score++
+        shooting = false
 
         if (score % 10 === 0 && timeBetweenEnemies > 1000) {
-          clearInterval(timeoutId);
-          timeBetweenEnemies -= 1000;
-          timeoutId = setInterval(makeEnemy, timeBetweenEnemies);
-        } else if (score % 5 === 0) {
-          enemyBaseSpeed += 1;
+          clearInterval(timeoutId)
+          timeBetweenEnemies -= 1000
+          timeoutId = setInterval(makeEnemy, timeBetweenEnemies)
+        } else if (score % 2 === 0) {
+          enemyBaseSpeed += 3
         }
       }
-    });
+
+    })
    
     if (bullet.x > canvas.width) {
-      shooting = false;
+      shooting = false
     }
   
-    context.fillStyle = '#09f';
-    bullet.draw();
+    context.fillStyle = 'magenta'
+    bullet.draw()
   }
  
 
-  context.font = '24px Arial';
-  context.textAlign = 'left';
+  context.font = '24px Arial'
+  context.textAlign = 'left'
   context.fillText('Score: ' + score, 1, 25)
 
   if (gameOver) {
-    endGame();
+    endGame()
   } else {
-    window.requestAnimationFrame(draw);
+    window.requestAnimationFrame(draw)
   }
 }
 
- canvas.focus();
+ canvas.focus()
 
 
 startGame()
