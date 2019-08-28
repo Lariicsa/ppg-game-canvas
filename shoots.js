@@ -1,6 +1,11 @@
 let canvas = document.getElementById('canvas')
-
 let context = canvas.getContext('2d')
+let end = document.querySelector('.end')
+let endScore = document.querySelector('.end-score') //ADD SCORE STYLE LIKE PPG
+let up = false
+let down = false
+let space = false
+let shooting = false
 
 class Board {
   constructor() {
@@ -15,9 +20,7 @@ class Board {
     }
     this.audio = new Audio()
     this.audio.src = './ppg-audio.mp3'
-    this.audio.onload = () =>{
-      this.playAudio()
-    }
+    this.audio.loop = true
 
   }
   draw() {
@@ -33,10 +36,6 @@ class Board {
       this.width,
       this.height,
     )
-  }
-
-  playAudio() {
-    this.audio = true
   }
   
 }
@@ -95,13 +94,6 @@ class Enemy{
   }
 }
 
-// const grubber = new Enemy()
-// const snake = new Enemy()
-// const badbutter = new Enemy()
-
-// let enemies2 = [grubber, snake, badbutter]
-
-
 let enemies = []
 let enemyBaseSpeed = 2
 function makeEnemy() {
@@ -114,18 +106,42 @@ function makeEnemy() {
 
 }
 
+class Candy{
+  constructor(x,y,speed) {
+    this.x= this.x
+    this.y= this.y
+    this.s= speed
+    this.height = 24
+    this.width = 24
+    this.imgc1 = new Image()
+    this.imgc1.src = './images/candy.png'
+  }
+
+  draw() {
+      context.drawImage(this.imgc1, this.x, this.y, this.height, this.width)
+  }
+}
+
+let candies = []
+let candiesBaseSpeed = 2
+function makeCandies() {
+  let candyX = canvas.width
+  let candySize = Math.round((Math.random() * 100)) + 15
+  let candyY = Math.round(Math.random() * (canvas.height - candySize * 2)) + candySize
+  let candySpeed = Math.round(Math.random() * candiesBaseSpeed) + candiesBaseSpeed
+  enemies.push(new Enemy(candyX, candyY, this.height, this.width, candySpeed))
+  console.log(candies)
+}
+
 //Background
 const board = new Board()
-
-console.log(board)
-
 //girl
 const girl = new Powergirl(50, canvas.height / 2, 116, 48, 5)
+//Candy
+const gum = new Candy(0, 0, 100, 14, 10)
 
-let up = false
-let down = false
-let space = false
-let shooting = false
+
+console.log(gum)
 
 class Laser{
   constructor(x, y, length, height, speed) {
@@ -170,7 +186,6 @@ let timeoutId = null
 
 
 function startGame() {
-  
 	// Kick off the enemy spawn interval
   timeoutId = setInterval(makeEnemy, timeBetweenEnemies)
 
@@ -180,14 +195,12 @@ function startGame() {
   setTimeout(makeEnemy, 1000)
 
   draw()
-  
-  canvas.removeEventListener('click', startGame)
+  //canvas.removeEventListener('click', startGame)
 }
 
 // Show the end game screen
 function endGame() {
   board.draw()
-	
   clearInterval(timeoutId)
   
   erase()
@@ -196,7 +209,15 @@ function endGame() {
   board.draw()
   context.fillStyle = '#213867'
   context.fillText('Game Over.', canvas.width/2 -200, canvas.height / 2)
-  
+  scoreHearts(score)
+}
+
+function scoreHearts(score) {
+  board.audio.currentTime = 0
+  board.audio.pause()
+
+  end.style.display = 'flex'
+  endScore.innerHTML = `Your Score: ${score}`
 }
 
 
@@ -210,6 +231,10 @@ canvas.addEventListener('keydown', function(event) {
   }
   if (event.keyCode === 32) { // SPACE
     shoot()
+  }
+  if (event.keyCode === 13) {
+      board.audio.play()
+      return startGame()
   }
 })
 
@@ -239,9 +264,11 @@ function shoot() {
 }
 
 let num = Math.round((Math.random() * 2))
+
 function draw() {
   erase()
   board.draw()
+  gum.draw()
   let gameOver = false
 
   enemies.forEach(function(enemy, i) {
@@ -320,7 +347,7 @@ function draw() {
   }
 }
 
- canvas.focus()
+ //canvas.focus()
 
 
-startGame()
+//startGame()
