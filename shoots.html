@@ -10,17 +10,26 @@
   <title>Power Puff Girls</title>
 </head>
 <body onload="canvas.focus()">
-  <img src="./images/ppf-logo.png" alt="Power Puff Girls" class="logo">
-  <br>
+  <img src="./images/ppf-logo.png" alt="Power Puff Girls" class="logo" title="Girl Power">
+
+  <div class="choose">
+    <ul>
+      <li> <input type="radio" name="girls" id="g1"> Bombón</li>
+      <li> <input type="radio" name="girls" id="g2"> Burbuja</li>
+      <li> <input type="radio" name="girls" id="g3"> Bellota</li>
+      <li></li>
+    </ul>
+  </div>
 
   <canvas id="canvas" width="800" height="400" tabindex="1"></canvas>
   <div class="end">
     <p class="end-score"></p>
-    <div class="girl"></div>
-
+    <div id="angry" class="girl"></div>
+    <div id="cool" class="girl"></div>
     <button onclick="location.reload()">Play again</button>
   </div>
 
+  <button onclick="location.reload()" class="btn restart">restart</button>
 
   <script type="text/javascript" src="./shoots.js"></script>
 </body>

@@ -6,11 +6,13 @@ let up = false
 let down = false
 let space = false
 let shooting = false
-let life = 1
+let life = 0
 let score = 0
 let timeBetweenEnemies = 5 * 1000
 let timeBetweenCandies = 3 * 1000
 let timeoutId = null
+let girlAngry = document.querySelector('#angry')
+let girlCool = document.querySelector('#cool')
 
 class Board {
   constructor() {
@@ -54,14 +56,22 @@ class Powergirl {
     this.l = length
     this.height = height
     this.s = speed
-    this.img = new Image()
-    this.img.src = './images/buttercup1.png'
-    this.imgl = new Image()
-    this.imgl.src = './images/power.png'
+    let g = 2
+    this.srcImage = this.chooseGirl(g)
+  }
+
+  chooseGirl(g) {
+    let img1 = './images/buttercup2.png'
+    let img2 = './images/buttercup3.png'
+    let img3 = './images/buttercup1.png'
+    let images = [img1, img2, img3]
+    return images[g]
   }
 
   draw() {
-    context.drawImage(this.img, this.x, this.y, this.l, this.height)
+    let image = new Image()
+    image.src = this.srcImage
+    context.drawImage(image, this.x, this.y, this.l, this.height)
   }
 }
 
@@ -83,7 +93,6 @@ class Enemy {
     let imgv5 = './images/princess.png'
     let imgv6 = './images/gruber.png'
     let imgv7 = './images/snake.png'
-
     let images = [imgv1, imgv2, imgv3, imgv4, imgv5, imgv6, imgv7]
     return images[num]
   }
@@ -97,7 +106,6 @@ class Enemy {
 
 let enemies = []
 let enemyBaseSpeed = 2
-
 function makeEnemy() {
   let enemyX = canvas.width
   let enemySize = Math.round((Math.random() * 100)) + 45
@@ -106,36 +114,12 @@ function makeEnemy() {
   enemies.push(new Enemy(enemyX, enemyY, enemySize, enemySpeed))
 }
 
-class Candy {
-  constructor(x, y, speed) {
-    this.x = x
-    this.y = y
-    this.s = speed
-    this.height = 24
-    this.width = 24
-    this.imgc1 = new Image()
-    this.imgc1.src = './images/candy.png'
-  }
-
-  draw() {
-    context.drawImage(this.imgc1, this.x, this.y, this.height, this.width)
-  }
-}
-
-let candies = []
-let candiesBaseSpeed = 4
-
-function makeCandies() {
-  let candyX = canvas.width
-  let candySize = Math.round((Math.random() * 100)) + 15
-  let candyY = Math.round(Math.random() * (30 - 30 * 2)) + candySize
-  let candySpeed = Math.round(Math.random() * candiesBaseSpeed) + candiesBaseSpeed
-  candies.push(new Candy(candyX, candyY, candySpeed))
-}
 //Background
 const board = new Board()
 //girl
-const girl = new Powergirl(50, canvas.height / 2, 116, 48, 5)
+const girl = new Powergirl(50, canvas.height / 2, 150, 68, 5)
+
+console.log(girl)
 
 class Laser {
   constructor(x, y, length, height, speed) {
@@ -156,6 +140,13 @@ class Laser {
 }
 
 const bullet = new Laser(0, 0, 100, 14, 10)
+
+function chosedGirl() {
+
+  let x = document.querySelector('#g1').value
+  console.log(x)
+  console.log('llega')
+}
 
 function isWithin(a, b, c) {
   return (a > b && a < c)
@@ -188,7 +179,6 @@ function endGame() {
 
   erase()
   context.font = '50px Sonsie One'
-
   board.draw()
   context.fillStyle = '#213867'
   context.fillText('Game Over.', canvas.width / 2 - 200, canvas.height / 2)
@@ -200,6 +190,12 @@ function scoreHearts(score) {
   board.audio.pause()
   end.style.display = 'flex'
   endScore.innerHTML = `Your Score: ${score}`
+  if (score > 10) {
+    girlCool.style.display = 'flex'
+  } else {
+    girlAngry.style.display = 'flex'
+    end.classList.add('fail')
+  }
 }
 
 canvas.addEventListener('keydown', function (event) {
@@ -253,8 +249,9 @@ function draw() {
     enemy.draw()
     enemy.x -= enemy.s
     if (enemy.x < 0) {
-      //life -= 1
-      gameOver = true
+      if(life < 1) {
+        gameOver = true
+      }
     }
     context.fillStyle = '#111'
   })
@@ -262,7 +259,10 @@ function draw() {
   enemies.forEach(function (enemy) {
     if (isColliding(enemy, girl)) {
       enemy.draw()
-      gameOver = true
+      
+      if(life < 1) {
+        gameOver = true
+      }
     }
   })
 
@@ -295,15 +295,16 @@ function draw() {
         shooting = false
 
         if (score > 2 && timeBetweenEnemies > 1000) {
-          life++
-          console.log(life)
+          //life++
+          enemyBaseSpeed = 3
+          console.log('life',life)
           clearInterval(timeoutId)
           timeBetweenEnemies -= 400
           timeoutId = setInterval(makeEnemy, timeBetweenEnemies)
+        } else if (score > 3) {
+          enemyBaseSpeed = 3
         } else if (score > 5) {
-          enemyBaseSpeed = 3
-        } else if (score > 10) {
-          enemyBaseSpeed = 3
+          enemyBaseSpeed = 4
         }
       }
 
@@ -327,3 +328,4 @@ function draw() {
     window.requestAnimationFrame(draw)
   }
 }
+
