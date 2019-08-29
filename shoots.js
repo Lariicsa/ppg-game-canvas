@@ -6,6 +6,7 @@ let up = false
 let down = false
 let space = false
 let shooting = false
+let life = 1
 
 class Board {
   constructor() {
@@ -39,7 +40,6 @@ class Board {
   }
   
 }
-
 
 class Powergirl{
   constructor(x, y, length, height, speed) {
@@ -103,13 +103,12 @@ function makeEnemy() {
   let enemyY = Math.round(Math.random() * (canvas.height - enemySize * 2)) + enemySize
   let enemySpeed = Math.round(Math.random() * enemyBaseSpeed) + enemyBaseSpeed
   enemies.push(new Enemy(enemyX, enemyY, enemySize, enemySpeed, num))
-
 }
 
 class Candy{
   constructor(x,y,speed) {
-    this.x= this.x
-    this.y= this.y
+    this.x= x
+    this.y= y
     this.s= speed
     this.height = 24
     this.width = 24
@@ -123,14 +122,13 @@ class Candy{
 }
 
 let candies = []
-let candiesBaseSpeed = 2
+let candiesBaseSpeed = 4
 function makeCandies() {
   let candyX = canvas.width
   let candySize = Math.round((Math.random() * 100)) + 15
-  let candyY = Math.round(Math.random() * (canvas.height - candySize * 2)) + candySize
+  let candyY = Math.round(Math.random() * (30 - 30 * 2)) + candySize
   let candySpeed = Math.round(Math.random() * candiesBaseSpeed) + candiesBaseSpeed
-  enemies.push(new Enemy(candyX, candyY, this.height, this.width, candySpeed))
-  console.log(candies)
+  candies.push(new Candy(candyX, candyY, candySpeed))
 }
 
 //Background
@@ -138,10 +136,7 @@ const board = new Board()
 //girl
 const girl = new Powergirl(50, canvas.height / 2, 116, 48, 5)
 //Candy
-const gum = new Candy(0, 0, 100, 14, 10)
-
-
-console.log(gum)
+//const candies = new Candy(0, 0, 100, 14, 10)
 
 class Laser{
   constructor(x, y, length, height, speed) {
@@ -161,11 +156,9 @@ class Laser{
 
 const bullet = new Laser(0, 0, 100, 14, 10)
 
-
 function isWithin(a, b, c) {
   return (a > b && a < c)
 }
-
 
 function isColliding(a, b) {
   let result = false
@@ -177,25 +170,19 @@ function isColliding(a, b) {
   return result
 }
 
-
 let score = 0
-
 let timeBetweenEnemies = 5 * 1000
-
+let timeBetweenCandies = 3 * 1000
 let timeoutId = null
 
 
 function startGame() {
-	// Kick off the enemy spawn interval
-  timeoutId = setInterval(makeEnemy, timeBetweenEnemies)
-
+  timeoutId = setInterval(makeEnemy, timeBetweenEnemies, timeBetweenCandies)
   board.draw()
   // Make the first enemy
-  
   setTimeout(makeEnemy, 1000)
-
+  //setTimeout(makeCandies, 1000)
   draw()
-  //canvas.removeEventListener('click', startGame)
 }
 
 // Show the end game screen
@@ -215,11 +202,9 @@ function endGame() {
 function scoreHearts(score) {
   board.audio.currentTime = 0
   board.audio.pause()
-
   end.style.display = 'flex'
   endScore.innerHTML = `Your Score: ${score}`
 }
-
 
 canvas.addEventListener('keydown', function(event) {
   event.preventDefault()
@@ -238,7 +223,6 @@ canvas.addEventListener('keydown', function(event) {
   }
 })
 
-
 canvas.addEventListener('keyup', function(event) {
   event.preventDefault()
   if (event.keyCode === 38) { // UP 
@@ -249,11 +233,9 @@ canvas.addEventListener('keyup', function(event) {
   }
 })
 
-
 function erase() {
   context.fillRect(0, 0, 800, 400)
 }
-
 
 function shoot() {
   if (!shooting) {
@@ -265,26 +247,37 @@ function shoot() {
 
 let num = Math.round((Math.random() * 2))
 
+//Draw all
 function draw() {
   erase()
   board.draw()
-  gum.draw()
   let gameOver = false
 
-  enemies.forEach(function(enemy, i) {
+  enemies.forEach(function(enemy) {
     enemy.draw(num)
     enemy.x -= enemy.s
     if (enemy.x < 0) {
+      //life -= 1
       gameOver = true
     }
     context.fillStyle = '#111'
   })
 
+  // candies.forEach(function(candy) {
+  //   candy.draw()
+  //   candy.x -= candy.s
+  //   context.fillStyle = 'golden'
+  // })
+  // candies.forEach(function(candy) {
+  //   if (isColliding(candy, girl)) {
+  //     candy.draw()
+  //   }
+  // })
 
-  enemies.forEach(function(enemy, i) {
+  enemies.forEach(function(enemy) {
     if (isColliding(enemy, girl)) {
-      enemy.draw()  //added
-      gameOver = true
+      enemy.draw()
+        gameOver = true
     }
   })
 
@@ -316,12 +309,12 @@ function draw() {
         score++
         shooting = false
 
-        if (score % 10 === 0 && timeBetweenEnemies > 1000) {
+        if (score % 2 === 0 && timeBetweenEnemies > 1000) {
           clearInterval(timeoutId)
           timeBetweenEnemies -= 1000
           timeoutId = setInterval(makeEnemy, timeBetweenEnemies)
-        } else if (score % 2 === 0) {
-          enemyBaseSpeed += 3
+        } else if (score % 10 === 0) {
+          enemyBaseSpeed += 2
         }
       }
 
@@ -335,10 +328,9 @@ function draw() {
     bullet.draw()
   }
  
-
   context.font = '24px Arial'
   context.textAlign = 'left'
-  context.fillText('Score: ' + score, 1, 25)
+  context.fillText('Score: ' + score, 1, 24)
 
   if (gameOver) {
     endGame()
@@ -348,6 +340,4 @@ function draw() {
 }
 
  //canvas.focus()
-
-
 //startGame()

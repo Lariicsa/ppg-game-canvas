@@ -8,6 +8,7 @@ html {
 body {
   background-color: #7cbdda;
   text-align: center;
+  position: relative;
 }
 
 body h1 {
