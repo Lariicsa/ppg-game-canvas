@@ -7,6 +7,10 @@ let down = false
 let space = false
 let shooting = false
 let life = 1
+let score = 0
+let timeBetweenEnemies = 5 * 1000
+let timeBetweenCandies = 3 * 1000
+let timeoutId = null
 
 class Board {
   constructor() {
@@ -22,6 +26,9 @@ class Board {
     this.audio = new Audio()
     this.audio.src = './ppg-audio.mp3'
     this.audio.loop = true
+    this.audio2 = new Audio()
+    this.audio2.src = './ppg-end.mp3'
+    this.audio2.loop = true
 
   }
   draw() {
@@ -38,16 +45,15 @@ class Board {
       this.height,
     )
   }
-  
 }
 
-class Powergirl{
+class Powergirl {
   constructor(x, y, length, height, speed) {
-    this.x= x
-    this.y= y
-    this.l= length
+    this.x = x
+    this.y = y
+    this.l = length
     this.height = height
-    this.s= speed
+    this.s = speed
     this.img = new Image()
     this.img.src = './images/buttercup1.png'
     this.imgl = new Image()
@@ -59,57 +65,52 @@ class Powergirl{
   }
 }
 
-
-class Enemy{
-  constructor(x, y, length, speed, num) {
-    this.x= x
-    this.y= y
-    this.l= length
-    this.s= speed
-    this.imgv1 = new Image()
-    this.imgv1.src = './images/mojo-jojo.png'
-    this.imgv2 = new Image()
-    this.imgv2.src = './images/sedusa.png'
-    this.imgv3 = new Image()
-    this.imgv3.src = './images/him.png'
-    this.imgv4 = new Image()
-    this.imgv4.src = './images/ameaba.png'
-    this.imgv5 = new Image()
-    this.imgv5.src = './images/princess.png'
-    this.imgv6 = new Image()
-    this.imgv6.src = './images/gruber.png'
-    this.imgv7 = new Image()
-    this.imgv7.src = './images/snake.png'
-    this.num = num
+class Enemy {
+  constructor(x, y, length, speed) {
+    this.x = x
+    this.y = y
+    this.l = length
+    this.s = speed
+    let index = Math.round((Math.random() * 6))
+    this.srcImage = this.chooseEnemy(index)
   }
 
-  draw(num) {
-    if(num === 0) {
-      context.drawImage(this.imgv1, this.x, this.y, this.l, this.l)
-    } else if (num === 1){
-      context.drawImage(this.imgv2, this.x, this.y, this.l, this.l)
-    } else if (num === 2){
-      context.drawImage(this.imgv3, this.x, this.y, this.l, this.l)
-    }
+  chooseEnemy(num) {
+    let imgv1 = './images/mojo-jojo.png'
+    let imgv2 = './images/sedusa.png'
+    let imgv3 = './images/him.png'
+    let imgv4 = './images/ameaba.png'
+    let imgv5 = './images/princess.png'
+    let imgv6 = './images/gruber.png'
+    let imgv7 = './images/snake.png'
+
+    let images = [imgv1, imgv2, imgv3, imgv4, imgv5, imgv6, imgv7]
+    return images[num]
+  }
+
+  draw() {
+    let image = new Image()
+    image.src = this.srcImage
+    context.drawImage(image, this.x, this.y, this.l, this.l)
   }
 }
 
 let enemies = []
 let enemyBaseSpeed = 2
+
 function makeEnemy() {
-  let num = Math.round((Math.random() * 2))
   let enemyX = canvas.width
-  let enemySize = Math.round((Math.random() * 100)) + 15
+  let enemySize = Math.round((Math.random() * 100)) + 45
   let enemyY = Math.round(Math.random() * (canvas.height - enemySize * 2)) + enemySize
   let enemySpeed = Math.round(Math.random() * enemyBaseSpeed) + enemyBaseSpeed
-  enemies.push(new Enemy(enemyX, enemyY, enemySize, enemySpeed, num))
+  enemies.push(new Enemy(enemyX, enemyY, enemySize, enemySpeed))
 }
 
-class Candy{
-  constructor(x,y,speed) {
-    this.x= x
-    this.y= y
-    this.s= speed
+class Candy {
+  constructor(x, y, speed) {
+    this.x = x
+    this.y = y
+    this.s = speed
     this.height = 24
     this.width = 24
     this.imgc1 = new Image()
@@ -117,12 +118,13 @@ class Candy{
   }
 
   draw() {
-      context.drawImage(this.imgc1, this.x, this.y, this.height, this.width)
+    context.drawImage(this.imgc1, this.x, this.y, this.height, this.width)
   }
 }
 
 let candies = []
 let candiesBaseSpeed = 4
+
 function makeCandies() {
   let candyX = canvas.width
   let candySize = Math.round((Math.random() * 100)) + 15
@@ -130,23 +132,22 @@ function makeCandies() {
   let candySpeed = Math.round(Math.random() * candiesBaseSpeed) + candiesBaseSpeed
   candies.push(new Candy(candyX, candyY, candySpeed))
 }
-
 //Background
 const board = new Board()
 //girl
 const girl = new Powergirl(50, canvas.height / 2, 116, 48, 5)
-//Candy
-//const candies = new Candy(0, 0, 100, 14, 10)
 
-class Laser{
+class Laser {
   constructor(x, y, length, height, speed) {
-    this.x= x
-    this.y= y
-    this.l= length
+    this.x = x
+    this.y = y
+    this.l = length
     this.height = height
-    this.s= speed
+    this.s = speed
     this.imgpow = new Image()
     this.imgpow.src = './images/power.png'
+    this.audio = new Audio()
+    this.audio.src = './ppg-laser.mp3'
   }
 
   draw() {
@@ -170,16 +171,10 @@ function isColliding(a, b) {
   return result
 }
 
-let score = 0
-let timeBetweenEnemies = 5 * 1000
-let timeBetweenCandies = 3 * 1000
-let timeoutId = null
-
-
 function startGame() {
+  canvas.focus()
   timeoutId = setInterval(makeEnemy, timeBetweenEnemies, timeBetweenCandies)
   board.draw()
-  // Make the first enemy
   setTimeout(makeEnemy, 1000)
   //setTimeout(makeCandies, 1000)
   draw()
@@ -187,15 +182,16 @@ function startGame() {
 
 // Show the end game screen
 function endGame() {
+  board.audio2.play()
   board.draw()
   clearInterval(timeoutId)
-  
+
   erase()
   context.font = '50px Sonsie One'
 
   board.draw()
   context.fillStyle = '#213867'
-  context.fillText('Game Over.', canvas.width/2 -200, canvas.height / 2)
+  context.fillText('Game Over.', canvas.width / 2 - 200, canvas.height / 2)
   scoreHearts(score)
 }
 
@@ -206,7 +202,7 @@ function scoreHearts(score) {
   endScore.innerHTML = `Your Score: ${score}`
 }
 
-canvas.addEventListener('keydown', function(event) {
+canvas.addEventListener('keydown', function (event) {
   event.preventDefault()
   if (event.keyCode === 38) { // UP
     up = true
@@ -216,14 +212,15 @@ canvas.addEventListener('keydown', function(event) {
   }
   if (event.keyCode === 32) { // SPACE
     shoot()
+
   }
   if (event.keyCode === 13) {
-      board.audio.play()
-      return startGame()
+    board.audio.play()
+    return startGame()
   }
 })
 
-canvas.addEventListener('keyup', function(event) {
+canvas.addEventListener('keyup', function (event) {
   event.preventDefault()
   if (event.keyCode === 38) { // UP 
     up = false
@@ -238,6 +235,7 @@ function erase() {
 }
 
 function shoot() {
+  bullet.audio.play()
   if (!shooting) {
     shooting = true
     bullet.x = girl.x + girl.l
@@ -245,16 +243,14 @@ function shoot() {
   }
 }
 
-let num = Math.round((Math.random() * 2))
-
 //Draw all
 function draw() {
   erase()
   board.draw()
   let gameOver = false
 
-  enemies.forEach(function(enemy) {
-    enemy.draw(num)
+  enemies.forEach(function (enemy) {
+    enemy.draw()
     enemy.x -= enemy.s
     if (enemy.x < 0) {
       //life -= 1
@@ -263,21 +259,10 @@ function draw() {
     context.fillStyle = '#111'
   })
 
-  // candies.forEach(function(candy) {
-  //   candy.draw()
-  //   candy.x -= candy.s
-  //   context.fillStyle = 'golden'
-  // })
-  // candies.forEach(function(candy) {
-  //   if (isColliding(candy, girl)) {
-  //     candy.draw()
-  //   }
-  // })
-
-  enemies.forEach(function(enemy) {
+  enemies.forEach(function (enemy) {
     if (isColliding(enemy, girl)) {
       enemy.draw()
-        gameOver = true
+      gameOver = true
     }
   })
 
@@ -287,7 +272,7 @@ function draw() {
   if (up) {
     girl.y -= girl.s
   }
- 
+
   if (girl.y < 0) {
     girl.y = 0
   }
@@ -296,39 +281,43 @@ function draw() {
   }
 
   girl.draw()
- 
+
   if (shooting) {
-   
+
     bullet.x += bullet.s
 
-    enemies.forEach(function(enemy, i) {
-      
-      enemy.draw() 
+    enemies.forEach(function (enemy, i) {
+
+      enemy.draw()
       if (isColliding(bullet, enemy)) {
         enemies.splice(i, 1)
         score++
         shooting = false
 
-        if (score % 2 === 0 && timeBetweenEnemies > 1000) {
+        if (score > 2 && timeBetweenEnemies > 1000) {
+          life++
+          console.log(life)
           clearInterval(timeoutId)
-          timeBetweenEnemies -= 1000
+          timeBetweenEnemies -= 400
           timeoutId = setInterval(makeEnemy, timeBetweenEnemies)
-        } else if (score % 10 === 0) {
-          enemyBaseSpeed += 2
+        } else if (score > 5) {
+          enemyBaseSpeed = 3
+        } else if (score > 10) {
+          enemyBaseSpeed = 3
         }
       }
 
     })
-   
+
     if (bullet.x > canvas.width) {
       shooting = false
     }
-  
-    context.fillStyle = 'magenta'
+
+    context.fillStyle = '#111'
     bullet.draw()
   }
- 
-  context.font = '24px Arial'
+
+  context.font = '24px Sonsie One'
   context.textAlign = 'left'
   context.fillText('Score: ' + score, 1, 24)
 
@@ -338,6 +327,3 @@ function draw() {
     window.requestAnimationFrame(draw)
   }
 }
-
- //canvas.focus()
-//startGame()

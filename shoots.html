@@ -9,13 +9,14 @@
   <link rel="stylesheet" href="style.css">
   <title>Power Puff Girls</title>
 </head>
-<body>
+<body onload="canvas.focus()">
   <img src="./images/ppf-logo.png" alt="Power Puff Girls" class="logo">
   <br>
 
   <canvas id="canvas" width="800" height="400" tabindex="1"></canvas>
   <div class="end">
     <p class="end-score"></p>
+    <div class="girl"></div>
 
     <button onclick="location.reload()">Play again</button>
   </div>
