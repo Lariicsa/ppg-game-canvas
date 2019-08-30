@@ -29,7 +29,7 @@ body button {
 }
 
 h2 {
-  font-size: 4vh;
+  font-size:  3.6vh;
   color: rgb(57, 37, 103);
 }
 
@@ -56,7 +56,7 @@ h2 {
 }
 
 img.logo {
-  width: 40%;
+  width: 36%;
   margin: 1% auto;
   display: block;
 }
@@ -269,7 +269,7 @@ img.logo {
 }
 
 em {
-  margin-top: 4% !important;
+  margin-top: 2% !important;
   font-size: 16px;
   color: #111;
 }
