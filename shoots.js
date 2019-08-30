@@ -183,7 +183,7 @@ function scoreHearts(score) {
   board.audio.pause()
   end.style.display = 'flex'
   endScore.innerHTML = `Your Score: ${score}`
-  if (score > 10) {
+  if (score > 5) {
     girlCool.style.display = 'flex'
   } else {
     girlAngry.style.display = 'flex'
@@ -302,17 +302,15 @@ function draw() {
         score++
         shooting = false
 
-        if (score > 2 && timeBetweenEnemies > 1000) {
-          //life++
+        if (score > 3 && timeBetweenEnemies > 1000) {
           enemyBaseSpeed = 3
-          console.log('life',life)
           clearInterval(timeoutId)
-          timeBetweenEnemies -= 400
+          timeBetweenEnemies -= 600
           timeoutId = setInterval(makeEnemy, timeBetweenEnemies)
-        } else if (score > 3) {
+        } else if (score > 3 && score < 5) {
           enemyBaseSpeed = 3
-        } else if (score > 5) {
-          enemyBaseSpeed = 4
+        } else if (score > 5 && score <8) {
+          enemyBaseSpeed += 4
         }
       }
 
