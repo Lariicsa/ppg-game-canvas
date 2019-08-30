@@ -13,6 +13,11 @@ let timeBetweenCandies = 3 * 1000
 let timeoutId = null
 let girlAngry = document.querySelector('#angry')
 let girlCool = document.querySelector('#cool')
+let girl1 = document.querySelector('#g1')
+let girl2 = document.querySelector('#g2')
+let girl3 = document.querySelector('#g3')
+let girl
+let startScreen = document.querySelector('.choose')
 
 class Board {
   constructor() {
@@ -50,14 +55,13 @@ class Board {
 }
 
 class Powergirl {
-  constructor(x, y, length, height, speed) {
+  constructor(x, y, length, height, speed, num) {
     this.x = x
     this.y = y
     this.l = length
     this.height = height
     this.s = speed
-    let g = 2
-    this.srcImage = this.chooseGirl(g)
+    this.srcImage = this.chooseGirl(num)
   }
 
   chooseGirl(g) {
@@ -116,10 +120,9 @@ function makeEnemy() {
 
 //Background
 const board = new Board()
-//girl
-const girl = new Powergirl(50, canvas.height / 2, 150, 68, 5)
 
-console.log(girl)
+
+//console.log(girl)
 
 class Laser {
   constructor(x, y, length, height, speed) {
@@ -141,13 +144,6 @@ class Laser {
 
 const bullet = new Laser(0, 0, 100, 14, 10)
 
-function chosedGirl() {
-
-  let x = document.querySelector('#g1').value
-  console.log(x)
-  console.log('llega')
-}
-
 function isWithin(a, b, c) {
   return (a > b && a < c)
 }
@@ -167,16 +163,13 @@ function startGame() {
   timeoutId = setInterval(makeEnemy, timeBetweenEnemies, timeBetweenCandies)
   board.draw()
   setTimeout(makeEnemy, 1000)
-  //setTimeout(makeCandies, 1000)
   draw()
 }
 
-// Show the end game screen
 function endGame() {
   board.audio2.play()
   board.draw()
   clearInterval(timeoutId)
-
   erase()
   context.font = '50px Sonsie One'
   board.draw()
@@ -238,6 +231,21 @@ function shoot() {
     bullet.y = girl.y + girl.height / 2
   }
 }
+
+girl1.addEventListener('click', function (e) {
+  girl = new Powergirl(50, canvas.height / 2, 150, 68, 5, 0)
+  startScreen.className += ' hide'
+})
+
+girl2.addEventListener('click', function (e) {
+  girl = new Powergirl(50, canvas.height / 2, 150, 68, 5, 1)
+  startScreen.className += ' hide'
+})
+
+girl3.addEventListener('click', function (e) {
+  girl = new Powergirl(50, canvas.height / 2, 150, 68, 5, 2)
+  startScreen.className += ' hide'
+})
 
 //Draw all
 function draw() {

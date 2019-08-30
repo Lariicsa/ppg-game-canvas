@@ -75,7 +75,7 @@ img.logo {
   top: 0;
   left: 0;
   z-index: 12;
-  display: none;
+  /* display: none; */
 }
 
 .end {
@@ -138,5 +138,30 @@ img.logo {
   background-position: center;
   height: 225px;
   width: 225px;
+  display: none;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.col:nth-child(2) {
+ height: 80vh;
+}
+
+.wrap-canvas {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.cn-ih {
+  
+}
+
+.hide {
   display: none;
 }

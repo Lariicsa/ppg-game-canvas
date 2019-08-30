@@ -10,27 +10,45 @@
   <title>Power Puff Girls</title>
 </head>
 <body onload="canvas.focus()">
-  <img src="./images/ppf-logo.png" alt="Power Puff Girls" class="logo" title="Girl Power">
-
   <div class="choose">
-    <ul>
-      <li> <input type="radio" name="girls" id="g1"> Bombón</li>
-      <li> <input type="radio" name="girls" id="g2"> Burbuja</li>
-      <li> <input type="radio" name="girls" id="g3"> Bellota</li>
+    <ul class="cn-ih">
+      <li>i</li>
+      <li>r</li>
+      <li>o</li>
+      <li>n</li>
       <li></li>
+      <li>h</li>
+      <li>a</li>
+      <li>c</li>
+      <li>k</li>
+    </ul>
+    <ul>
+      <li id="g1">Bombón</li>
+      <li id="g2">Burbuja</li>
+      <li id="g3">Bellota</li>
+      <li class="name"></li>
     </ul>
   </div>
 
+<div class="wrap-canvas">
+   <div class="col">
+      <img src="./images/ppf-logo.png" alt="Power Puff Girls" class="logo" title="Girl Power">
   <canvas id="canvas" width="800" height="400" tabindex="1"></canvas>
+   </div>
+   <div class="col">
+      <p>Press enter to start</p>
+     <p>spacebar to shoot</p>
+     <p>Arrow Up</p>
+     <p>Arrow Down</p>
+     <button onclick="location.reload()" class="btn restart">restart</button>
+   </div>
+</div>
   <div class="end">
     <p class="end-score"></p>
     <div id="angry" class="girl"></div>
     <div id="cool" class="girl"></div>
-    <button onclick="location.reload()">Play again</button>
+    <button onclick="location.reload()" class="btn again">Play again</button>
   </div>
-
-  <button onclick="location.reload()" class="btn restart">restart</button>
-
   <script type="text/javascript" src="./shoots.js"></script>
 </body>
 </html>
