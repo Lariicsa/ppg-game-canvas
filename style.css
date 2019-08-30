@@ -233,14 +233,14 @@ img.logo {
   background-image: url('./images/bubbles-home.png');
 }
 #g2:hover {
-  text-shadow: -2px 1px  cornflowerblue;
+  text-shadow: -2px 1px cornflowerblue;
 }
 
 #g3 {
   background-image: url('./images/buttercup-home.png');
 }
 #g3:hover {
-  text-shadow: -2px 1px  green;
+  text-shadow: -2px 1px green;
 }
 
 .select-girl li {
@@ -272,6 +272,43 @@ em {
   margin-top: 4% !important;
   font-size: 16px;
   color: #111;
+}
+
+.instructions {
+  list-style-type: none;
+}
+
+.instructions li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+ul.instructions li:nth-child(1) {
+  margin-bottom: 32px;
+}
+
+ul.instructions li:nth-child(2) p {
+  background-image: url('./images/enter.png');
+}
+
+ul.instructions li:nth-child(3) p {
+  background-image: url('./images/space.png');
+}
+
+ul.instructions li:nth-child(4) p {
+  background-image: url('./images/arrow-up.png');
+}
+
+ul.instructions li:nth-child(5) p {
+  background-image: url('./images/arrow-down.png');
+}
+
+ul.instructions li p{
+  background-position: center;
+  background-size: cover;
+  width: 100px;
+  height: 100px;
 }
 
 .hide {
