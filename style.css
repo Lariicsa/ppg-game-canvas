@@ -294,14 +294,24 @@ ul.instructions li:nth-child(2) p {
 
 ul.instructions li:nth-child(3) p {
   background-image: url('./images/space.png');
+  height: 44px;
+  width: 182px;
 }
 
 ul.instructions li:nth-child(4) p {
   background-image: url('./images/arrow-up.png');
+  height: 50px;
+  width: 50px;
 }
 
 ul.instructions li:nth-child(5) p {
   background-image: url('./images/arrow-down.png');
+  height: 50px;
+  width: 50px;
+}
+
+ul.instructions li:nth-child(6) {
+  margin-top: 20%;
 }
 
 ul.instructions li p{
