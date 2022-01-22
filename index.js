@@ -2,9 +2,10 @@
 import Board from "./modules/board.js";
 import Powergirl from "./modules/Powergirl.js";
 import Enemy from "./modules/Enemy.js";
+import Laser from './modules/Laser.js'
 
 let canvas = document.getElementById("canvas");
-let context = canvas.getContext("2d");
+let CONTEXT = canvas.getContext("2d");
 let end = document.querySelector(".end");
 let endScore = document.querySelector(".end-score"); //ADD SCORE STYLE LIKE PPG
 let up = false;
@@ -32,31 +33,14 @@ function makeEnemy() {
   let enemyY =
     Math.round(Math.random() * (canvas.height - enemySize * 2)) + enemySize;
   let enemySpeed = Math.round(Math.random() * enemyBaseSpeed) + enemyBaseSpeed;
-  enemies.push(new Enemy(enemyX, enemyY, enemySize, enemySpeed, context));
+  enemies.push(new Enemy(enemyX, enemyY, enemySize, enemySpeed, CONTEXT));
 }
 
 //Background
-const board = new Board(canvas.width, canvas.height, context);
+const board = new Board(canvas.width, canvas.height, CONTEXT);
 
-class Laser {
-  constructor(x, y, length, height, speed) {
-    this.x = x;
-    this.y = y;
-    this.l = length;
-    this.height = height;
-    this.s = speed;
-    this.imgpow = new Image();
-    this.imgpow.src = "./images/power.png";
-    this.audio = new Audio();
-    this.audio.src = "./ppg-laser.mp3";
-  }
 
-  draw() {
-    context.drawImage(this.imgpow, this.x, this.y, this.l, this.height);
-  }
-}
-
-const bullet = new Laser(0, 0, 100, 14, 10);
+const bullet = new Laser(0, 0, 100, 14, 10, CONTEXT);
 
 function isWithin(a, b, c) {
   return a > b && a < c;
@@ -85,10 +69,10 @@ function endGame() {
   board.draw();
   clearInterval(timeoutId);
   erase();
-  context.font = "50px Sonsie One";
+  CONTEXT.font = "50px Sonsie One";
   board.draw();
-  context.fillStyle = "#213867";
-  context.fillText("Game Over.", canvas.width / 2 - 200, canvas.height / 2);
+  CONTEXT.fillStyle = "#213867";
+  CONTEXT.fillText("Game Over.", canvas.width / 2 - 200, canvas.height / 2);
   scoreHearts(score);
 }
 
@@ -138,7 +122,7 @@ canvas.addEventListener("keyup", function (event) {
 });
 
 function erase() {
-  context.fillRect(0, 0, 800, 400);
+  CONTEXT.fillRect(0, 0, 800, 400);
 }
 
 function shoot() {
@@ -151,17 +135,17 @@ function shoot() {
 }
 
 girl1.addEventListener("click", function (e) {
-  girl = new Powergirl(50, canvas.height / 2, 150, 68, 5, 0, context);
+  girl = new Powergirl(50, canvas.height / 2, 150, 68, 5, 0, CONTEXT);
   startScreen.className += " hide";
 });
 
 girl2.addEventListener("click", function (e) {
-  girl = new Powergirl(50, canvas.height / 2, 150, 68, 5, 1, context);
+  girl = new Powergirl(50, canvas.height / 2, 150, 68, 5, 1, CONTEXT);
   startScreen.className += " hide";
 });
 
 girl3.addEventListener("click", function (e) {
-  girl = new Powergirl(50, canvas.height / 2, 150, 68, 5, 2, context);
+  girl = new Powergirl(50, canvas.height / 2, 150, 68, 5, 2, CONTEXT);
   startScreen.className += " hide";
 });
 
@@ -179,7 +163,7 @@ function draw() {
         gameOver = true;
       }
     }
-    context.fillStyle = "#111";
+    CONTEXT.fillStyle = "#111";
   });
 
   enemies.forEach(function (enemy) {
@@ -235,13 +219,13 @@ function draw() {
       shooting = false;
     }
 
-    context.fillStyle = "#111";
+    CONTEXT.fillStyle = "#111";
     bullet.draw();
   }
 
-  context.font = "24px Sonsie One";
-  context.textAlign = "left";
-  context.fillText("Score: " + score, 1, 24);
+  CONTEXT.font = "24px Sonsie One";
+  CONTEXT.textAlign = "left";
+  CONTEXT.fillText("Score: " + score, 1, 24);
 
   if (gameOver) {
     endGame();
