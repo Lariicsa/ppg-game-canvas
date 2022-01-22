@@ -1,5 +1,6 @@
 "use strict";
-import Board from "./board.js";
+import Board from "./modules/board.js";
+import Powergirl from "./modules/Powergirl.js"
 
 let canvas = document.getElementById("canvas");
 let context = canvas.getContext("2d");
@@ -7,7 +8,7 @@ let end = document.querySelector(".end");
 let endScore = document.querySelector(".end-score"); //ADD SCORE STYLE LIKE PPG
 let up = false;
 let down = false;
-let space = false;
+// let space = false;
 let shooting = false;
 let life = 0;
 let score = 0;
@@ -21,32 +22,6 @@ let girl2 = document.querySelector("#g2");
 let girl3 = document.querySelector("#g3");
 let girl;
 let startScreen = document.querySelector(".choose");
-
-
-class Powergirl {
-  constructor(x, y, length, height, speed, num) {
-    this.x = x;
-    this.y = y;
-    this.l = length;
-    this.height = height;
-    this.s = speed;
-    this.srcImage = this.chooseGirl(num);
-  }
-
-  chooseGirl(g) {
-    let img1 = "./images/blossom.png";
-    let img2 = "./images/bubbles.png";
-    let img3 = "https://im.fantasticocomic.com/img/rocket-sin-letras.png";
-    let images = [img1, img2, img3];
-    return images[g];
-  }
-
-  draw() {
-    let image = new Image();
-    image.src = this.srcImage;
-    context.drawImage(image, this.x, this.y, this.l, this.height);
-  }
-}
 
 class Enemy {
   constructor(x, y, length, speed) {
