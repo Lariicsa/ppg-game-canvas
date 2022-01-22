@@ -1,6 +1,7 @@
 "use strict";
 import Board from "./modules/board.js";
-import Powergirl from "./modules/Powergirl.js"
+import Powergirl from "./modules/Powergirl.js";
+import Enemy from "./modules/Enemy.js";
 
 let canvas = document.getElementById("canvas");
 let context = canvas.getContext("2d");
@@ -23,35 +24,6 @@ let girl3 = document.querySelector("#g3");
 let girl;
 let startScreen = document.querySelector(".choose");
 
-class Enemy {
-  constructor(x, y, length, speed) {
-    this.x = x;
-    this.y = y;
-    this.l = length;
-    this.s = speed;
-    let index = Math.round(Math.random() * 6);
-    this.srcImage = this.chooseEnemy(index);
-  }
-
-  chooseEnemy(num) {
-    let imgv1 = "./images/mojo-jojo.png";
-    let imgv2 = "./images/sedusa.png";
-    let imgv3 = "./images/him.png";
-    let imgv4 = "./images/ameaba.png";
-    let imgv5 = "./images/princess.png";
-    let imgv6 = "./images/gruber.png";
-    let imgv7 = "./images/snake.png";
-    let images = [imgv1, imgv2, imgv3, imgv4, imgv5, imgv6, imgv7];
-    return images[num];
-  }
-
-  draw() {
-    let image = new Image();
-    image.src = this.srcImage;
-    context.drawImage(image, this.x, this.y, this.l, this.l);
-  }
-}
-
 let enemies = [];
 let enemyBaseSpeed = 2;
 function makeEnemy() {
@@ -60,13 +32,11 @@ function makeEnemy() {
   let enemyY =
     Math.round(Math.random() * (canvas.height - enemySize * 2)) + enemySize;
   let enemySpeed = Math.round(Math.random() * enemyBaseSpeed) + enemyBaseSpeed;
-  enemies.push(new Enemy(enemyX, enemyY, enemySize, enemySpeed));
+  enemies.push(new Enemy(enemyX, enemyY, enemySize, enemySpeed, context));
 }
 
 //Background
 const board = new Board(canvas.width, canvas.height, context);
-
-//console.log(girl)
 
 class Laser {
   constructor(x, y, length, height, speed) {
@@ -181,17 +151,17 @@ function shoot() {
 }
 
 girl1.addEventListener("click", function (e) {
-  girl = new Powergirl(50, canvas.height / 2, 150, 68, 5, 0);
+  girl = new Powergirl(50, canvas.height / 2, 150, 68, 5, 0, context);
   startScreen.className += " hide";
 });
 
 girl2.addEventListener("click", function (e) {
-  girl = new Powergirl(50, canvas.height / 2, 150, 68, 5, 1);
+  girl = new Powergirl(50, canvas.height / 2, 150, 68, 5, 1, context);
   startScreen.className += " hide";
 });
 
 girl3.addEventListener("click", function (e) {
-  girl = new Powergirl(50, canvas.height / 2, 150, 68, 5, 2);
+  girl = new Powergirl(50, canvas.height / 2, 150, 68, 5, 2, context);
   startScreen.className += " hide";
 });
 
