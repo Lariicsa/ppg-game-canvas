@@ -67,7 +67,7 @@ class Powergirl {
   chooseGirl(g) {
     let img1 = './images/blossom.png'
     let img2 = './images/bubbles.png'
-    let img3 = 'https://im.fantasticocomic.com/img/rocket-sin-letras.png'
+    let img3 = './images/buttercup1.png'
     let images = [img1, img2, img3]
     return images[g]
   }

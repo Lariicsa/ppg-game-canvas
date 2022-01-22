@@ -4,13 +4,12 @@ import Powergirl from "./modules/Powergirl.js";
 import Enemy from "./modules/Enemy.js";
 import Laser from './modules/Laser.js'
 
-let canvas = document.getElementById("canvas");
-let CONTEXT = canvas.getContext("2d");
+let CANVAS = document.getElementById("canvas");
+let CONTEXT = CANVAS.getContext("2d");
 let end = document.querySelector(".end");
 let endScore = document.querySelector(".end-score"); //ADD SCORE STYLE LIKE PPG
 let up = false;
 let down = false;
-// let space = false;
 let shooting = false;
 let life = 0;
 let score = 0;
@@ -28,18 +27,17 @@ let startScreen = document.querySelector(".choose");
 let enemies = [];
 let enemyBaseSpeed = 2;
 function makeEnemy() {
-  let enemyX = canvas.width;
+  let enemyX = CANVAS.width;
   let enemySize = Math.round(Math.random() * 100) + 45;
   let enemyY =
-    Math.round(Math.random() * (canvas.height - enemySize * 2)) + enemySize;
+    Math.round(Math.random() * (CANVAS.height - enemySize * 2)) + enemySize;
   let enemySpeed = Math.round(Math.random() * enemyBaseSpeed) + enemyBaseSpeed;
   enemies.push(new Enemy(enemyX, enemyY, enemySize, enemySpeed, CONTEXT));
 }
 
 //Background
-const board = new Board(canvas.width, canvas.height, CONTEXT);
-
-
+const board = new Board(CANVAS.width, CANVAS.height, CONTEXT);
+//laser
 const bullet = new Laser(0, 0, 100, 14, 10, CONTEXT);
 
 function isWithin(a, b, c) {
@@ -57,7 +55,7 @@ function isColliding(a, b) {
 }
 
 function startGame() {
-  canvas.focus();
+  CANVAS.focus();
   timeoutId = setInterval(makeEnemy, timeBetweenEnemies, timeBetweenCandies);
   board.draw();
   setTimeout(makeEnemy, 1000);
@@ -72,7 +70,7 @@ function endGame() {
   CONTEXT.font = "50px Sonsie One";
   board.draw();
   CONTEXT.fillStyle = "#213867";
-  CONTEXT.fillText("Game Over.", canvas.width / 2 - 200, canvas.height / 2);
+  CONTEXT.fillText("Game Over.", CANVAS.width / 2 - 200, CANVAS.height / 2);
   scoreHearts(score);
 }
 
@@ -89,7 +87,7 @@ function scoreHearts(score) {
   }
 }
 
-canvas.addEventListener("keydown", function (event) {
+CANVAS.addEventListener("keydown", function (event) {
   event.preventDefault();
   if (event.keyCode === 38) {
     // UP
@@ -109,7 +107,7 @@ canvas.addEventListener("keydown", function (event) {
   }
 });
 
-canvas.addEventListener("keyup", function (event) {
+CANVAS.addEventListener("keyup", function (event) {
   event.preventDefault();
   if (event.keyCode === 38) {
     // UP
@@ -135,17 +133,17 @@ function shoot() {
 }
 
 girl1.addEventListener("click", function (e) {
-  girl = new Powergirl(50, canvas.height / 2, 150, 68, 5, 0, CONTEXT);
+  girl = new Powergirl(50, CANVAS.height / 2, 150, 68, 5, 0, CONTEXT);
   startScreen.className += " hide";
 });
 
 girl2.addEventListener("click", function (e) {
-  girl = new Powergirl(50, canvas.height / 2, 150, 68, 5, 1, CONTEXT);
+  girl = new Powergirl(50, CANVAS.height / 2, 150, 68, 5, 1, CONTEXT);
   startScreen.className += " hide";
 });
 
 girl3.addEventListener("click", function (e) {
-  girl = new Powergirl(50, canvas.height / 2, 150, 68, 5, 2, CONTEXT);
+  girl = new Powergirl(50, CANVAS.height / 2, 150, 68, 5, 2, CONTEXT);
   startScreen.className += " hide";
 });
 
@@ -186,8 +184,8 @@ function draw() {
   if (girl.y < 0) {
     girl.y = 0;
   }
-  if (girl.y > canvas.height - girl.height) {
-    girl.y = canvas.height - girl.height;
+  if (girl.y > CANVAS.height - girl.height) {
+    girl.y = CANVAS.height - girl.height;
   }
 
   girl.draw();
@@ -215,7 +213,7 @@ function draw() {
       }
     });
 
-    if (bullet.x > canvas.width) {
+    if (bullet.x > CANVAS.width) {
       shooting = false;
     }
 
